@@ -43,7 +43,7 @@ public class AudioController {
         TrackScheduler trackScheduler = new TrackScheduler(player);
         player.addListener(trackScheduler);
 
-        playerManager.loadItem("File:\\\\D:\\Dossiers\\Musiques\\Discord.mp3", new AudioLoadResultHandler() {
+        playerManager.loadItem("https://www.youtube.com/watch?v=wWN6hZu9jjE", new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
                 trackScheduler.queue(track);
