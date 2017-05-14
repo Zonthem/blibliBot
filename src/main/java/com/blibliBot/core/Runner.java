@@ -23,11 +23,15 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 public class Runner extends ListenerAdapter {
 
     JDA jda;
+    
+    AudioController ac;
 
     public Runner(String arg) {
         try {
             jda = new JDABuilder(AccountType.BOT).setToken(arg).buildBlocking();
-            jda.addEventListener(new ListenerPing());
+            jda.addEventListener(new ListenerPing(jda));
+            ac = new AudioController(jda, jda.getGuilds().get(0));
+            ac.setup();
         } catch (LoginException | IllegalArgumentException | InterruptedException | RateLimitedException ex) {
             Logger.getLogger(Runner.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -38,26 +42,6 @@ public class Runner extends ListenerAdapter {
             Runner runner = new Runner(args[0]);
         } else {
             System.out.println("Token absent");
-        }
-    }
-    
-    @Override
-    public void onMessageReceived(MessageReceivedEvent evt) {
-        if (evt.getAuthor().isBot()) return;
-        
-        System.out.println("Message reçu");
-        
-        String message = evt.getMessage().getRawContent();
-        
-        if (message.equals("!ping")) {
-            MessageChannel channel = evt.getChannel();
-            channel.sendMessage("Pong !").queue();
-        } else if (message.equals("!stop")) {
-            MessageChannel channel = evt.getChannel();
-            channel.sendMessage("Stoppage du bot...").queue();
-            jda.shutdown();
-        } else {
-            evt.getChannel().sendMessage(message).queue();
         }
     }
 }
